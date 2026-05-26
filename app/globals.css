@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper:#F4EFE6; --paper-2:#EAE3D5; --paper-3:#DCD3C0;
+  --ink:#1A1D2E;   --ink-2:#3B405A;   --ink-3:#6B6F86;
+  --accent:#D9542B; --accent-2:#C03E14;
+  --sage:#6B8A6B; --sky:#4A6FA5; --mustard:#C99A2E; --plum:#7A4B7A;
+  --hair:rgba(26,29,46,.10); --hair-2:rgba(26,29,46,.18);
+  --serif: var(--font-serif, "Instrument Serif", serif);
+  --sans:  var(--font-sans,  "Geist", sans-serif);
+  --mono:  var(--font-mono,  "Geist Mono", monospace);
 }
+body[data-theme="dusk"]   { --paper:#1B1B22; --paper-2:#23232C; --paper-3:#2E2E38; --ink:#F4EFE6; --ink-2:#C9C5BB; --ink-3:#8C8A86; --hair:rgba(244,239,230,.10); --hair-2:rgba(244,239,230,.18); }
+body[data-theme="meadow"] { --paper:#EEF1E6; --paper-2:#E0E5D2; --paper-3:#CFD7BB; --accent:#3F6B3B; --accent-2:#2A4F28; --sage:#7A8C5C; }
+body[data-theme="dawn"]   { --paper:#F6E9E2; --paper-2:#EFD8CC; --paper-3:#E4C2B0; --accent:#B23A48; --accent-2:#8E2230; --sage:#A37C5B; --sky:#6B5B95; }
+body[data-accent="forest"] { --accent:#3F6B3B; --accent-2:#2A4F28; }
+body[data-accent="cobalt"] { --accent:#2B5B9E; --accent-2:#1A3E73; }
+body[data-accent="plum"]   { --accent:#7A4B7A; --accent-2:#5E3360; }
+body[data-accent="copper"] { --accent:#B85C20; --accent-2:#8E3F10; }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-feature-settings:"ss01","cv11";-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+.serif{font-family:var(--serif);font-weight:400;letter-spacing:-.01em}
+.mono{font-family:var(--mono);font-feature-settings:"tnum"}
+.muted{color:var(--ink-3)}
+.hair{border:0;border-top:.5px solid var(--hair);margin:0}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.pill{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;background:var(--paper-2);border:.5px solid var(--hair);font-size:11.5px;color:var(--ink-2);font-weight:500;letter-spacing:.01em}
+.pill.accent{background:color-mix(in oklab,var(--accent) 12%,var(--paper));color:var(--accent-2);border-color:color-mix(in oklab,var(--accent) 25%,transparent)}
+.pill.sage{background:color-mix(in oklab,var(--sage) 14%,var(--paper));color:#3a5a3a;border-color:color-mix(in oklab,var(--sage) 30%,transparent)}
+.pill.sky{background:color-mix(in oklab,var(--sky) 12%,var(--paper));color:#2a4a78;border-color:color-mix(in oklab,var(--sky) 28%,transparent)}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;background:var(--ink);color:var(--paper);border:0;font:500 13.5px/1 var(--sans);cursor:pointer;letter-spacing:.005em;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-1px);background:var(--accent)}
+.btn.ghost{background:transparent;color:var(--ink);border:.5px solid var(--hair-2)}
+.btn.ghost:hover{background:var(--paper-2)}
+.btn.accent{background:var(--accent);color:#fff}
+.btn.accent:hover{background:var(--accent-2)}
+.btn.sm{padding:6px 11px;font-size:12.5px}
+.btn.danger{background:#dc2626;color:#fff}
+.btn.danger:hover{background:#b91c1c}
+
+.card{background:var(--paper);border:.5px solid var(--hair-2);border-radius:16px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 1px 1px rgba(0,0,0,.03)}
+
+.scrim{position:fixed;inset:0;background:rgba(20,18,16,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;animation:fade .18s ease}
+.modal{width:100%;max-width:720px;max-height:88vh;background:var(--paper);border-radius:20px;border:.5px solid var(--hair-2);overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.25);animation:pop .22s ease}
+
+.shimmer{background:linear-gradient(90deg,var(--paper-2) 0%,var(--paper-3) 50%,var(--paper-2) 100%);background-size:600px 100%;animation:shimmer 1.4s linear infinite;border-radius:6px;display:inline-block}
+.fade-in{animation:fadeIn .35s ease both}
+
+.app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{display:flex;align-items:center;gap:18px;padding:14px 24px;border-bottom:.5px solid var(--hair);background:color-mix(in oklab,var(--paper) 92%,transparent);position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:baseline;gap:6px}
+.brand .logo{font-family:var(--serif);font-style:italic;font-size:26px;line-height:1;color:var(--ink)}
+.brand .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);transform:translateY(-4px)}
+.brand .tag{font-size:11px;color:var(--ink-3);letter-spacing:.12em;text-transform:uppercase;margin-left:6px}
+.nav{display:flex;gap:2px;margin-left:14px}
+.nav button{background:transparent;border:0;color:var(--ink-2);padding:8px 12px;border-radius:10px;font:500 13.5px/1 var(--sans);cursor:pointer;letter-spacing:.005em;display:flex;gap:7px;align-items:center}
+.nav button:hover{background:var(--paper-2);color:var(--ink)}
+.nav button.active{background:var(--ink);color:var(--paper)}
+.nav .count{font-family:var(--mono);font-size:10.5px;opacity:.7}
+.top-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+main{padding:24px;max-width:1320px;width:100%;margin:0 auto;flex:1}
+
+body[data-density="compact"] .card{border-radius:12px}
+body[data-density="compact"] main{padding:14px}
+body[data-density="comfy"]   main{padding:32px}
+
+@media(max-width:760px){
+  .topbar{padding:10px 14px;gap:8px;flex-wrap:wrap}
+  .brand .tag{display:none}
+  .nav{order:3;width:100%;overflow-x:auto;margin-left:0;padding-bottom:2px}
+  .nav button{font-size:12.5px;padding:6px 10px;white-space:nowrap}
+  main{padding:14px}
 }
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--paper-3);border-radius:10px}
+::-webkit-scrollbar-track{background:transparent}
+
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes shimmer{0%{background-position:-300px 0}100%{background-position:300px 0}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
