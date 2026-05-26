@@ -3,7 +3,7 @@ import { initialEntries, initialPackingItems } from './data';
 import type { Entry, PackingItem } from './types';
 
 const g = globalThis as unknown as { _sql?: ReturnType<typeof postgres> };
-export const sql = g._sql ?? postgres(process.env.DATABASE_URL!);
+export const sql = g._sql ?? postgres(process.env.DATABASE_URL!, { onnotice: () => {} });
 if (process.env.NODE_ENV !== 'production') g._sql = sql;
 
 export async function initDb() {
