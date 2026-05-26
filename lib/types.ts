@@ -52,6 +52,7 @@ export interface TripState {
 }
 
 export type Action =
+  | { type: 'HYDRATE';        entries: Entry[]; packingItems: PackingItem[] }
   | { type: 'ADD_ENTRY';      entry: Entry }
   | { type: 'UPDATE_ENTRY';   entry: Entry }
   | { type: 'DELETE_ENTRY';   id: string }
