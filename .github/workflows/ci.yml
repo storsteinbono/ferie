@@ -6,8 +6,8 @@ on:
   pull_request:
 
 env:
-  REGISTRY: git.sidtech.no
-  IMAGE: git.sidtech.no/steffen/ferie/app
+  REGISTRY: ghcr.io
+  IMAGE: ghcr.io/${{ github.repository_owner }}/ferie
 
 jobs:
   check:
@@ -35,6 +35,10 @@ jobs:
     needs: check
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - uses: actions/checkout@v4
 
@@ -43,8 +47,8 @@ jobs:
       - uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: steffen
-          password: ${{ secrets.REGISTRY_TOKEN }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: docker/metadata-action@v5
         id: meta
