@@ -23,7 +23,7 @@ export function fmtDate(s: string | Date): string {
 }
 
 export function fmtTime(s: string | Date): string {
-  return ymd(s).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  return ymd(s).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 }
 
 export function sameDay(a: string | Date, b: string | Date): boolean {
