@@ -21,6 +21,12 @@ export function reducer(state: TripState, action: Action): TripState {
       return { ...state, entries: state.entries.filter(e => e.id !== action.id) };
     case 'TOGGLE_PACKING':
       return { ...state, packingItems: state.packingItems.map(p => p.id === action.id ? { ...p, packed: !p.packed } : p) };
+    case 'ADD_PACKING':
+      return { ...state, packingItems: [...state.packingItems, action.item] };
+    case 'UPDATE_PACKING':
+      return { ...state, packingItems: state.packingItems.map(p => p.id === action.id ? { ...p, label: action.label, group: action.group } : p) };
+    case 'DELETE_PACKING':
+      return { ...state, packingItems: state.packingItems.filter(p => p.id !== action.id) };
     case 'SET_PREF':
       return { ...state, preferences: { ...state.preferences, [action.key]: action.value } };
     default:

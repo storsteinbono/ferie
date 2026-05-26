@@ -52,8 +52,11 @@ export interface TripState {
 }
 
 export type Action =
-  | { type: 'ADD_ENTRY';    entry: Entry }
-  | { type: 'UPDATE_ENTRY'; entry: Entry }
-  | { type: 'DELETE_ENTRY'; id: string }
+  | { type: 'ADD_ENTRY';      entry: Entry }
+  | { type: 'UPDATE_ENTRY';   entry: Entry }
+  | { type: 'DELETE_ENTRY';   id: string }
   | { type: 'TOGGLE_PACKING'; id: string }
+  | { type: 'ADD_PACKING';    item: PackingItem }
+  | { type: 'UPDATE_PACKING'; id: string; label: string; group: string }
+  | { type: 'DELETE_PACKING'; id: string }
   | { type: 'SET_PREF'; key: keyof Preferences; value: string };

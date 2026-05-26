@@ -17,6 +17,18 @@ describe('ymd', () => {
   });
 });
 
+describe('fmtDate', () => {
+  it('returns a readable date string', () => {
+    expect(fmtDate('2026-06-22')).toMatch(/22/);
+  });
+});
+
+describe('fmtTime', () => {
+  it('formats hours and minutes', () => {
+    expect(fmtTime('2026-06-22T14:30')).toBe('14:30');
+  });
+});
+
 describe('sameDay', () => {
   it('matches date to datetime on same day', () => {
     expect(sameDay('2026-06-22', '2026-06-22T23:59')).toBe(true);

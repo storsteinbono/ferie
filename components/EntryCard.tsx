@@ -1,6 +1,6 @@
 'use client';
 import { Icon } from './Icon';
-import { fmtDate, fmtTime, daysBetween, cityById } from '@/lib/helpers';
+import { fmtDate, fmtTime, daysBetween, cityById, fmtNOK } from '@/lib/helpers';
 import { cities } from '@/lib/data';
 import type { Entry, Density } from '@/lib/types';
 
@@ -62,9 +62,16 @@ export function EntryCard({ entry, density = 'regular', onEdit }: {
       </div>
       <div style={{ display:'flex', flexDirection:'column', alignItems:'flex-end', gap:6, paddingTop:4 }}>
         {entry.price !== undefined && entry.price > 0 && (
-          <div className="mono" style={{ fontSize:15, fontWeight:500 }}>
-            {entry.currency === 'EUR' ? '€' : entry.currency}{entry.price}
-          </div>
+          <>
+            <div className="mono" style={{ fontSize:15, fontWeight:500 }}>
+              {fmtNOK(entry.price, entry.currency)}
+            </div>
+            {entry.currency && entry.currency !== 'NOK' && (
+              <div className="mono muted" style={{ fontSize:11 }}>
+                {entry.currency === 'EUR' ? '€' : entry.currency === 'CHF' ? 'Fr.' : entry.currency + ' '}{entry.price}
+              </div>
+            )}
+          </>
         )}
         {onEdit && (
           <button className="btn ghost sm" onClick={() => onEdit(entry)} style={{ padding:'5px 8px' }}>

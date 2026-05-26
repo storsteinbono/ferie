@@ -1,5 +1,18 @@
 import type { City, Entry } from './types';
 
+// Approximate mid-2026 exchange rates to NOK
+export const FX: Record<string, number> = {
+  NOK: 1, EUR: 11.80, CHF: 13.20, DKK: 1.58, USD: 10.80, GBP: 14.90,
+};
+
+export function toNOK(price: number, currency = 'EUR'): number {
+  return Math.round(price * (FX[currency] ?? 1));
+}
+
+export function fmtNOK(price: number, currency = 'EUR'): string {
+  return 'kr ' + toNOK(price, currency).toLocaleString('nb-NO');
+}
+
 export function ymd(s: string | Date): Date {
   if (s instanceof Date) return s;
   return new Date(s.length === 10 ? s + 'T00:00' : s);
