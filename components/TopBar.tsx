@@ -18,8 +18,8 @@ const sel: React.CSSProperties = {
   borderRadius:8, padding:'4px 8px', color:'var(--ink)', cursor:'pointer',
 };
 
-export function TopBar({ tab, onTabChange, onPaste, entryCount }: {
-  tab: Tab; onTabChange: (t: Tab) => void; onPaste: () => void; entryCount: number;
+export function TopBar({ tab, onTabChange, onPaste, onSettings, entryCount }: {
+  tab: Tab; onTabChange: (t: Tab) => void; onPaste: () => void; onSettings: () => void; entryCount: number;
 }) {
   const { state, dispatch } = useTrip();
   const { theme, accent, density } = state.preferences;
@@ -52,6 +52,9 @@ export function TopBar({ tab, onTabChange, onPaste, entryCount }: {
         <select style={sel} value={density} onChange={e => setPref('density', e.target.value)}>
           {(['compact','regular','comfy'] as const).map(d => <option key={d} value={d}>{d}</option>)}
         </select>
+        <button className="btn ghost sm" onClick={onSettings} title="Settings">
+          <Icon name="gear" size={14} />
+        </button>
         <button className="btn accent sm" onClick={onPaste}>
           <Icon name="plus" size={14} /> Add booking
         </button>

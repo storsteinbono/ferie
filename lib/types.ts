@@ -43,6 +43,8 @@ export interface BudgetCat {
 
 export interface Preferences {
   theme: Theme; accent: Accent; density: Density;
+  ocmApiKey?: string;
+  googleMapsApiKey?: string;
 }
 
 export interface TripState {
