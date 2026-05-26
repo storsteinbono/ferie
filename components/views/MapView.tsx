@@ -11,6 +11,13 @@ function isFerry(a: string, b: string) {
 }
 
 interface Charger { id: number; name: string; lat: number; lng: number; isTesla: boolean; kw: number; stalls: number; }
+interface OCMStation {
+  ID: number;
+  AddressInfo: { Title: string; Latitude: number; Longitude: number } | null;
+  OperatorInfo: { Title: string } | null;
+  Connections: { PowerKW: number | null; Quantity: number | null }[] | null;
+  NumberOfPoints: number | null;
+}
 
 export function MapView() {
   const { state } = useTrip();
@@ -23,10 +30,33 @@ export function MapView() {
 
   useEffect(() => {
     setLoading(true);
-    const url = `/api/chargers${ocmKey ? `?key=${encodeURIComponent(ocmKey)}` : ''}`;
-    fetch(url)
+    const params = new URLSearchParams({
+      output: 'json',
+      connectiontypeid: '33',
+      minpowerkw: '50',
+      maxresults: '800',
+      compact: 'false',
+      verbose: 'false',
+      latitude: '53',
+      longitude: '8',
+      distance: '1500',
+      distanceunit: 'km',
+    });
+    if (ocmKey) params.set('key', ocmKey);
+    fetch(`https://api.openchargemap.io/v3/poi/?${params}`)
       .then(r => r.json())
-      .then((data: Charger[]) => setChargers(data))
+      .then((data: OCMStation[]) => setChargers(data
+        .filter(s => s.AddressInfo?.Latitude && s.AddressInfo?.Longitude)
+        .map(s => ({
+          id: s.ID,
+          name: s.AddressInfo!.Title,
+          lat: s.AddressInfo!.Latitude,
+          lng: s.AddressInfo!.Longitude,
+          isTesla: (s.OperatorInfo?.Title ?? '').toLowerCase().includes('tesla'),
+          kw: Math.max(0, ...(s.Connections ?? []).map(c => c.PowerKW ?? 0)),
+          stalls: s.NumberOfPoints ?? (s.Connections ?? []).reduce((n, c) => n + (c.Quantity ?? 1), 0),
+        }))
+      ))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [ocmKey]);
