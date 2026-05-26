@@ -1,6 +1,7 @@
 'use client';
 import { cities, chargers } from '@/lib/data';
 import { project } from '@/lib/helpers';
+import { useTrip } from '@/lib/store';
 
 const FERRY_PAIRS = new Set(['oslo→kiel', 'hir→krs']);
 
@@ -9,11 +10,15 @@ function isFerry(a: string, b: string) {
 }
 
 export function MapView() {
-  const pts = cities.map(c => ({ ...project(c.lat, c.lng), id:c.id, name:c.name, flag:c.flag, label:c.label }));
+  const { state } = useTrip();
+
+  const citiesWithEntries = new Set(state.entries.map(e => e.city));
+  const visible = cities.filter(c => citiesWithEntries.has(c.id));
+  const pts = visible.map(c => ({ ...project(c.lat, c.lng), id: c.id, name: c.name, flag: c.flag, label: c.label }));
 
   const segments: { x1:number; y1:number; x2:number; y2:number; ferry:boolean }[] = [];
   for (let i = 0; i < pts.length - 1; i++) {
-    segments.push({ x1:pts[i].x, y1:pts[i].y, x2:pts[i+1].x, y2:pts[i+1].y, ferry:isFerry(cities[i].id, cities[i+1].id) });
+    segments.push({ x1:pts[i].x, y1:pts[i].y, x2:pts[i+1].x, y2:pts[i+1].y, ferry:isFerry(visible[i].id, visible[i+1].id) });
   }
 
   return (
@@ -39,7 +44,7 @@ export function MapView() {
         })}
 
         {pts.map((p, i) => {
-          const isEnd = cities[i].label === 'Start' || cities[i].label === 'Home';
+          const isEnd = visible[i].label === 'Start' || visible[i].label === 'Home';
           return (
             <g key={p.id}>
               <circle cx={p.x} cy={p.y} r={isEnd ? 10 : 7} fill={isEnd ? 'var(--accent)' : 'var(--ink)'} stroke="var(--paper)" strokeWidth="2"/>
